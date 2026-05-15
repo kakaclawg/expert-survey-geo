@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 2 — Perceptual Test</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; }
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── Intro ── */
+#intro { max-width: 660px; margin: 56px auto; background: white; padding: 48px; border-radius: 12px; box-shadow: 0 2px 24px rgba(0,0,0,0.08); }
+#intro h1 { font-size: 1.55em; color: #1a1a2e; margin-bottom: 6px; }
+#intro .sub { color: #666; font-size: 0.9em; margin-bottom: 24px; }
+.instr { background: #f7f9fc; border-left: 3px solid #2c5f8a; padding: 16px 18px; border-radius: 4px; font-size: 0.88em; color: #444; line-height: 1.65; margin-bottom: 24px; }
+.instr ul { margin-left: 18px; }
+.instr li { margin-top: 6px; }
+.field-label { display: block; font-size: 0.85em; font-weight: 600; color: #555; margin-bottom: 6px; }
+input[type="text"] { width: 100%; padding: 10px 14px; border: 1.5px solid #ddd; border-radius: 6px; font-size: 0.95em; margin-bottom: 22px; outline: none; }
+input[type="text"]:focus { border-color: #2c5f8a; }
+.btn { display: inline-flex; align-items: center; padding: 11px 26px; background: #2c5f8a; color: white; border: none; border-radius: 7px; cursor: pointer; font-size: 0.93em; font-weight: 500; }
+.btn:hover { background: #1e4a6e; }
+.btn:disabled { background: #b0b8c1; cursor: not-allowed; }
+.btn-sec { background: white; color: #2c5f8a; border: 1.5px solid #2c5f8a; }
+.btn-sec:hover { background: #eaf3fb; }
+
+/* ── Survey ── */
+#survey { max-width: 700px; margin: 0 auto; padding: 24px 16px 40px; }
+.s-header { background: white; padding: 14px 22px; border-radius: 9px; box-shadow: 0 1px 6px rgba(0,0,0,0.06); margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+.s-header-left h2 { font-size: 0.97em; color: #1a1a2e; }
+.pbar-wrap { height: 5px; background: #e0e4ea; border-radius: 3px; margin-top: 7px; width: 300px; }
+.pbar-fill { height: 100%; background: #2c5f8a; border-radius: 3px; transition: width 0.3s; }
+.pbar-text { font-size: 0.82em; color: #888; }
+
+.qcard { background: white; border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,0.07); padding: 32px 28px; margin-bottom: 20px; }
+.img-center { text-align: center; margin-bottom: 28px; }
+.img-center img { max-width: 380px; max-height: 460px; width: 100%; object-fit: contain; border: 2px solid #e0e4ea; border-radius: 8px; background: #f7f7f7; }
+
+/* Questions */
+.q-section { margin-bottom: 24px; }
+.q-section:last-child { margin-bottom: 0; }
+.q-section h3 { font-size: 0.93em; font-weight: 600; color: #1a1a2e; margin-bottom: 13px; }
+
+/* Q1 – 7-choice grid */
+.radio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 8px; }
+.roption { padding: 10px 14px; border: 2px solid #e0e4ea; border-radius: 7px; cursor: pointer; font-size: 0.86em; color: #444; transition: all 0.13s; user-select: none; }
+.roption:hover { border-color: #2c5f8a; color: #2c5f8a; }
+.roption.selected { border-color: #2c5f8a; background: #eaf3fb; color: #2c5f8a; font-weight: 600; }
+
+/* Q2 – Yes/No */
+.binary-row { display: flex; gap: 12px; }
+.boption { flex: 0 0 100px; padding: 14px 0; border: 2px solid #e0e4ea; border-radius: 8px; text-align: center; cursor: pointer; font-size: 1em; font-weight: 600; color: #555; transition: all 0.13s; user-select: none; }
+.boption:hover { border-color: #2c5f8a; color: #2c5f8a; }
+.boption.selected { border-color: #2c5f8a; background: #eaf3fb; color: #2c5f8a; }
+
+/* Nav */
+.nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; }
+.nav-hint { font-size: 0.82em; color: #aaa; }
+
+/* Complete */
+#complete { max-width: 580px; margin: 80px auto; background: white; padding: 52px; border-radius: 12px; box-shadow: 0 2px 24px rgba(0,0,0,0.08); text-align: center; }
+#complete .tick { font-size: 3em; margin-bottom: 16px; }
+#complete h1 { font-size: 1.5em; color: #1a1a2e; margin-bottom: 14px; }
+#complete p { color: #555; line-height: 1.6; margin-bottom: 28px; }
+</style>
+</head>
+<body>
+
+<!-- ── INTRO ── -->
+<div id="intro" class="screen active">
+  <h1>Session 2<br>Perceptual Test</h1>
+  <p class="sub">You will be shown 42 geological images in a fixed shuffled order. For each image, answer two questions.</p>
+
+  <div class="instr">
+    <strong>Instructions</strong>
+    <ul>
+      <li><strong>Q1:</strong> Identify the geological texture type of the image by selecting one of the 7 options.</li>
+      <li><strong>Q2:</strong> Judge whether the image is AI-generated or a real core photograph.</li>
+      <li>Images are shown in random order. Evaluate each image independently.</li>
+      <li>This session uses different samples from Session 1.</li>
+      <li>Do <em>not</em> refresh the page — your progress will be lost.</li>
+    </ul>
+  </div>
+
+  <label class="field-label">Your Name / Evaluator ID</label>
+  <input type="text" id="ev-name" placeholder="e.g. John Smith">
+  <br>
+  <button class="btn" onclick="startSession()">Begin Session 2 &rarr;</button>
+</div>
+
+<!-- ── SURVEY ── -->
+<div id="survey" class="screen">
+  <div class="s-header">
+    <div class="s-header-left">
+      <h2>Session 2 — Perceptual Test</h2>
+      <div class="pbar-wrap"><div class="pbar-fill" id="pbar"></div></div>
+    </div>
+    <div class="pbar-text" id="pbar-text">1 / 42</div>
+  </div>
+  <div id="qcontainer"></div>
+  <div class="nav-bar">
+    <button class="btn btn-sec" id="prev-btn" onclick="nav(-1)">&larr; Previous</button>
+    <span class="nav-hint" id="nav-hint"></span>
+    <button class="btn" id="next-btn" onclick="nav(1)">Next &rarr;</button>
+  </div>
+</div>
+
+<!-- ── COMPLETE ── -->
+<div id="complete" class="screen">
+  <div class="tick">&#10003;</div>
+  <h1>Session 2 Complete</h1>
+  <p id="done-msg">Your responses have been submitted. Thank you for your time!</p>
+  <a class="btn" href="index.html">Back to Home</a>
+</div>
+
+<script>
+// ── CONFIG ───────────────────────────────────────────────────────────────────
+// Replace this URL after deploying the Google Apps Script backend
+const BACKEND_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const CLASSES   = ['GS','FS','PK','WK','BS','RS','CR'];
+const CLS_NAMES = { GS:'Grainstone', FS:'Floatstone', PK:'Packstone', WK:'Wackestone', BS:'Boundstone', RS:'Rudstone', CR:'Crystalline' };
+
+// Seeded PRNG — same fixed shuffle for all evaluators
+function prng(seed) {
+  return () => {
+    let t = seed += 0x6D2B79F5;
+    t = Math.imul(t ^ t >>> 15, t | 1);
+    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffle(arr, rng) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// Build 42 items (7 classes × 2 samples × 3 methods), then shuffle
+const raw = [];
+for (const cls of CLASSES)
+  for (let n = 1; n <= 2; n++)
+    for (const method of ['GT','Exp0','AttGated'])
+      raw.push({ cls, n, method });
+
+const ITEMS = shuffle(raw, prng(20260516));
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let evaluator = '';
+let cur = 0;
+const resp = ITEMS.map(() => ({ q1: null, q2: null }));
+
+// ── SCREENS ───────────────────────────────────────────────────────────────────
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function startSession() {
+  const n = document.getElementById('ev-name').value.trim();
+  if (!n) { alert('Please enter your name to continue.'); return; }
+  evaluator = n;
+  show('survey');
+  render(0);
+}
+
+// ── NAVIGATION ────────────────────────────────────────────────────────────────
+function nav(dir) {
+  if (!validate()) return;
+  const next = cur + dir;
+  if (next < 0) return;
+  if (next >= ITEMS.length) { submit(); return; }
+  render(next);
+}
+
+function validate() {
+  const r = resp[cur];
+  if (!r.q1) { alert('Please answer Q1 before continuing.'); return false; }
+  if (!r.q2) { alert('Please answer Q2 before continuing.'); return false; }
+  return true;
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render(idx) {
+  cur = idx;
+  const { cls, n, method } = ITEMS[idx];
+  const r = resp[idx];
+
+  const pct = ((idx + 1) / ITEMS.length * 100).toFixed(1);
+  document.getElementById('pbar').style.width = pct + '%';
+  document.getElementById('pbar-text').textContent = `${idx + 1} / ${ITEMS.length}`;
+  document.getElementById('prev-btn').disabled = idx === 0;
+  document.getElementById('next-btn').textContent = idx === ITEMS.length - 1 ? 'Submit ✓' : 'Next →';
+  document.getElementById('nav-hint').textContent = `Image ${idx + 1} of ${ITEMS.length}`;
+
+  const imgSrc = `images/session2/s2_${cls}_${n}_${method}.jpg`;
+
+  document.getElementById('qcontainer').innerHTML = `
+    <div class="qcard">
+      <div class="img-center">
+        <img src="${imgSrc}" alt="Geological core image" onerror="this.style.background='#f2f3f5'; this.alt='[image not loaded]';">
+      </div>
+
+      <div class="q-section">
+        <h3>Q1 — What is the geological texture type of this sample?</h3>
+        <div class="radio-grid">
+          ${CLASSES.map(c => `
+            <div class="roption ${r.q1 === c ? 'selected' : ''}" data-cls="${c}" onclick="selQ1(this,'${c}')">${CLS_NAMES[c]}</div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="q-section">
+        <h3>Q2 — Is this image AI-generated?</h3>
+        <div class="binary-row">
+          <div class="boption ${r.q2 === 'yes' ? 'selected' : ''}" data-val="yes" onclick="selQ2(this,'yes')">Yes</div>
+          <div class="boption ${r.q2 === 'no'  ? 'selected' : ''}" data-val="no"  onclick="selQ2(this,'no')">No</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── INTERACTIONS ──────────────────────────────────────────────────────────────
+function selQ1(el, cls) {
+  resp[cur].q1 = cls;
+  document.querySelectorAll('.roption').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selQ2(el, val) {
+  resp[cur].q2 = val;
+  document.querySelectorAll('.boption').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── SUBMIT ────────────────────────────────────────────────────────────────────
+async function submit() {
+  if (!validate()) return;
+
+  const rows = ITEMS.map(({ cls, n, method }, i) => {
+    const r = resp[i];
+    const isAI = method !== 'GT';
+    return {
+      image_id:      `s2_${cls}_${n}_${method}`,
+      class_code:    cls,
+      class_name:    CLS_NAMES[cls],
+      sample_num:    n,
+      true_method:   method,
+      is_ai:         isAI,
+      q1_answer:     r.q1,
+      q1_name:       CLS_NAMES[r.q1],
+      q1_correct:    r.q1 === cls,
+      q2_answer:     r.q2,
+      q2_correct:    (r.q2 === 'yes') === isAI,
+    };
+  });
+
+  const payload = { session: 'Session2', evaluator, timestamp: new Date().toISOString(), rows };
+  show('complete');
+
+  try {
+    const res = await fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    document.getElementById('done-msg').textContent = 'Your responses have been submitted. Thank you!';
+  } catch (e) {
+    document.getElementById('done-msg').innerHTML =
+      '<strong>Submission failed (network error).</strong><br>Please copy the text below and email it to the researcher.<br><br>' +
+      `<textarea style="width:100%;height:140px;font-size:0.72em;margin-top:8px">${JSON.stringify(payload,null,2)}</textarea>`;
+  }
+}
+
+window.addEventListener('beforeunload', e => {
+  if (document.getElementById('survey').classList.contains('active')) {
+    e.preventDefault(); e.returnValue = '';
+  }
+});
+</script>
+</body>
+</html>
