@@ -313,12 +313,12 @@ async function submit() {
   show('complete');
 
   try {
-    const res = await fetch(BACKEND_URL, {
+    await fetch(BACKEND_URL, {
       method: 'POST',
+      mode: 'no-cors',
       headers: { 'Content-Type': 'text/plain' },
       body: JSON.stringify(payload)
     });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
     document.getElementById('done-msg').textContent = 'Your responses have been submitted successfully. Thank you!';
   } catch (e) {
     document.getElementById('done-msg').innerHTML =
