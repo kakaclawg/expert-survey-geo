@@ -184,7 +184,7 @@ function startSession() {
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 function nav(dir) {
-  if (!validate()) return;
+  if (dir > 0 && !validate()) return;
   const next = cur + dir;
   if (next < 0) return;
   if (next >= ITEMS.length) { submit(); return; }
