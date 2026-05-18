@@ -134,7 +134,7 @@ const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzbc79GVGGRUr-HMyEg
 // ── DATA ─────────────────────────────────────────────────────────────────────
 const CLASSES   = ['GS','FS','PK','WK','BS','RS','CR'];
 const CLS_NAMES = { GS:'Grainstone', FS:'Floatstone', PK:'Packstone', WK:'Wackestone', BS:'Boundstone', RS:'Rudstone', CR:'Crystalline' };
-const METHODS   = ['Exp0','Exp3','Exp4','AttGated'];
+const METHODS   = ['Exp0','Exp1','Exp3','Exp4'];
 const LABELS    = ['A','B','C','D'];
 const RATE_WORDS = ['','Poor','Fair','Moderate','Good','Excellent'];
 
@@ -306,7 +306,7 @@ async function submit() {
       rating_Exp0:       r.r1B[methodToPos['Exp0']],
       rating_Exp3:       r.r1B[methodToPos['Exp3']],
       rating_Exp4:       r.r1B[methodToPos['Exp4']],
-      rating_AttGated:   r.r1B[methodToPos['AttGated']],
+      rating_Exp1:       r.r1B[methodToPos['Exp1']],
     };
   });
 

@@ -147,7 +147,7 @@ function shuffle(arr, rng) {
 const raw = [];
 for (const cls of CLASSES)
   for (let n = 1; n <= 2; n++)
-    for (const method of ['GT','Exp0','AttGated'])
+    for (const method of ['GT','Exp0','Exp4'])
       raw.push({ cls, n, method });
 
 const ITEMS = shuffle(raw, prng(20260516));
