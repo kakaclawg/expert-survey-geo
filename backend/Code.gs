@@ -43,12 +43,12 @@ function writeRows(ss, data) {
   if (!sheet) {
     sheet = ss.insertSheet(data.session);
     const header = isS1
-      ? ['timestamp','evaluator','sample_id','class_code','class_name','sample_num',
+      ? ['timestamp','evaluator','experience','sample_id','class_code','class_name','sample_num',
          'method_A','method_B','method_C','method_D',
          'choice_1A_pos','choice_1A_method',
          'rating_1B_A','rating_1B_B','rating_1B_C','rating_1B_D',
          'rating_Exp0','rating_Exp1','rating_Exp3','rating_Exp4']
-      : ['timestamp','evaluator','image_id','class_code','class_name','sample_num',
+      : ['timestamp','evaluator','experience','image_id','class_code','class_name','sample_num',
          'true_method','is_ai_generated',
          'q1_answer','q1_answer_name','q1_correct',
          'q2_answer','q2_correct'];
@@ -63,7 +63,7 @@ function writeRows(ss, data) {
 
   if (isS1) {
     data.rows.forEach(r => sheet.appendRow([
-      ts, ev, r.sample_id, r.class_code, r.class_name, r.sample_num,
+      ts, ev, data.experience, r.sample_id, r.class_code, r.class_name, r.sample_num,
       r.method_A, r.method_B, r.method_C, r.method_D,
       r.choice_1A_pos, r.choice_1A_method,
       r.rating_1B_A, r.rating_1B_B, r.rating_1B_C, r.rating_1B_D,
@@ -71,7 +71,7 @@ function writeRows(ss, data) {
     ]));
   } else {
     data.rows.forEach(r => sheet.appendRow([
-      ts, ev, r.image_id, r.class_code, r.class_name, r.sample_num,
+      ts, ev, data.experience, r.image_id, r.class_code, r.class_name, r.sample_num,
       r.true_method, r.is_ai,
       r.q1_answer, r.q1_name, r.q1_correct,
       r.q2_answer, r.q2_correct,

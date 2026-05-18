@@ -86,6 +86,13 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 
   <label class="field-label">Your Name / Evaluator ID</label>
   <input type="text" id="ev-name" placeholder="e.g. John Smith">
+  <label class="field-label">Experience in classifying carbonate rocks</label>
+  <select id="ev-exp" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:6px;font-size:0.95em;margin-bottom:22px;outline:none;">
+    <option value="">— Please select —</option>
+    <option value="beginner">Beginner (&lt;2 years)</option>
+    <option value="intermediate">Intermediate (2–5 years)</option>
+    <option value="expert">Expert (&gt;5 years)</option>
+  </select>
   <br>
   <button class="btn" onclick="startSession()">Begin Session 2 &rarr;</button>
 </div>
@@ -154,6 +161,7 @@ const ITEMS = shuffle(raw, prng(20260516));
 
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let evaluator = '';
+let experience = '';
 let cur = 0;
 const resp = ITEMS.map(() => ({ q1: null, q2: null }));
 
@@ -165,8 +173,11 @@ function show(id) {
 
 function startSession() {
   const n = document.getElementById('ev-name').value.trim();
+  const exp = document.getElementById('ev-exp').value;
   if (!n) { alert('Please enter your name to continue.'); return; }
+  if (!exp) { alert('Please select your experience level to continue.'); return; }
   evaluator = n;
+  experience = exp;
   show('survey');
   render(0);
 }
@@ -263,7 +274,7 @@ async function submit() {
     };
   });
 
-  const payload = { session: 'Session2', evaluator, timestamp: new Date().toISOString(), rows };
+  const payload = { session: 'Session2', evaluator, experience, timestamp: new Date().toISOString(), rows };
   show('complete');
   var _n2=5, _el2=document.getElementById('countdown2');
   var _t2=setInterval(function(){ _n2--; if(_el2) _el2.textContent=_n2; if(_n2<=0){ clearInterval(_t2); window.location.href='index.html'; } },1000);
