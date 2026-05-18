@@ -37,12 +37,13 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 .qcard { background: white; border-radius: 12px; box-shadow: 0 2px 14px rgba(0,0,0,0.07); padding: 28px; margin-bottom: 20px; }
 .q-meta { font-size: 0.78em; color: #aaa; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 18px; }
 
-/* Image layout — 5 equal columns: GT | A | B | C | D */
-.img-layout { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 28px; }
+/* Image layout — GT left, 2×2 grid right */
+.img-layout { display: grid; grid-template-columns: 1fr 2fr; gap: 14px; margin-bottom: 28px; align-items: start; }
 .img-block { }
+.img-grid-2x2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .img-tag { font-size: 0.75em; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; color: #555; }
 .img-tag.gt-tag { color: #c0392b; }
-.img-block img { width: 100%; max-height: 220px; object-fit: contain; border: 2px solid #e0e4ea; border-radius: 6px; display: block; background: #f7f7f7; }
+.img-block img { width: 100%; object-fit: contain; border: 2px solid #e0e4ea; border-radius: 6px; display: block; background: #f7f7f7; }
 
 /* 1A choice */
 .q-section { margin-bottom: 26px; }
@@ -236,12 +237,14 @@ function render(idx) {
           <div class="img-tag gt-tag">▣ Ground Truth</div>
           <img src="${ip(1,cls,n,'GT')}" alt="GT" onerror="${imgFallback('GT')}">
         </div>
-        ${LABELS.map((lbl, i) => `
-          <div class="img-block">
-            <div class="img-tag">Image ${lbl}</div>
-            <img src="${ip(1,cls,n,order[i])}" alt="Image ${lbl}" onerror="${imgFallback(lbl)}">
-          </div>
-        `).join('')}
+        <div class="img-grid-2x2">
+          ${LABELS.map((lbl, i) => `
+            <div class="img-block">
+              <div class="img-tag">Image ${lbl}</div>
+              <img src="${ip(1,cls,n,order[i])}" alt="Image ${lbl}" onerror="${imgFallback(lbl)}">
+            </div>
+          `).join('')}
+        </div>
       </div>
 
       <!-- 1A -->
