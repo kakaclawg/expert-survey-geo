@@ -13,7 +13,8 @@
  *     at the top of session1.html and session2.html
  */
 
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
+const SPREADSHEET_ID = '1qflZbYMZ0du1Iumg3oAduXSjQFKhJ69ZRE5SOciPF5E';
+const NOTIFY_EMAIL   = 'd.shi@qmul.ac.uk';
 
 // ── Entry points ──────────────────────────────────────────────────────────────
 
@@ -22,6 +23,7 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
     writeRows(ss, data);
+    sendEmail(data);
     return json({ status: 'ok', rows_written: data.rows.length });
   } catch (err) {
     return json({ status: 'error', message: err.toString() });
@@ -45,7 +47,7 @@ function writeRows(ss, data) {
          'method_A','method_B','method_C','method_D',
          'choice_1A_pos','choice_1A_method',
          'rating_1B_A','rating_1B_B','rating_1B_C','rating_1B_D',
-         'rating_Exp0','rating_Exp3','rating_Exp4','rating_AttGated']
+         'rating_Exp0','rating_Exp1','rating_Exp3','rating_Exp4']
       : ['timestamp','evaluator','image_id','class_code','class_name','sample_num',
          'true_method','is_ai_generated',
          'q1_answer','q1_answer_name','q1_correct',
@@ -65,7 +67,7 @@ function writeRows(ss, data) {
       r.method_A, r.method_B, r.method_C, r.method_D,
       r.choice_1A_pos, r.choice_1A_method,
       r.rating_1B_A, r.rating_1B_B, r.rating_1B_C, r.rating_1B_D,
-      r.rating_Exp0, r.rating_Exp3, r.rating_Exp4, r.rating_AttGated,
+      r.rating_Exp0, r.rating_Exp1, r.rating_Exp3, r.rating_Exp4,
     ]));
   } else {
     data.rows.forEach(r => sheet.appendRow([
@@ -75,6 +77,12 @@ function writeRows(ss, data) {
       r.q2_answer, r.q2_correct,
     ]));
   }
+}
+
+function sendEmail(data) {
+  const subject = `[Expert Survey] ${data.session} — ${data.evaluator} — ${data.timestamp.slice(0,10)}`;
+  const body = JSON.stringify(data, null, 2);
+  MailApp.sendEmail({ to: NOTIFY_EMAIL, subject: subject, body: body });
 }
 
 function json(obj) {
