@@ -48,6 +48,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 .roption { padding: 10px 14px; border: 2px solid #e0e4ea; border-radius: 7px; cursor: pointer; font-size: 0.86em; color: #444; transition: all 0.13s; user-select: none; }
 .roption:hover { border-color: #2c5f8a; color: #2c5f8a; }
 .roption.selected { border-color: #2c5f8a; background: #eaf3fb; color: #2c5f8a; font-weight: 600; }
+.mudstone-note { font-size: 0.78em; color: #999; margin-top: 10px; font-style: italic; }
 
 /* Q2 – Yes/No */
 .binary-row { display: flex; gap: 12px; }
@@ -248,6 +249,7 @@ function render(idx) {
             <div class="roption ${r.q1 === c ? 'selected' : ''}" data-cls="${c}" onclick="selQ1(this,'${c}')">${CLS_NAMES[c]}</div>
           `).join('')}
         </div>
+        <p class="mudstone-note">No mudstone textures are included in this exercise.</p>
       </div>
 
       <div class="q-section">
