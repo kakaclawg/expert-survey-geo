@@ -82,13 +82,13 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 
 <!-- ── INTRO ── -->
 <div id="intro" class="screen active">
-  <h1>Session 2<br>Perceptual Test</h1>
-  <p class="sub">You will be shown 42 geological images in a fixed shuffled order. For each image, answer two questions.</p>
+  <h1>Session 2<br>Dunham texture classification</h1>
+  <p class="sub">You will be shown 42 images of carbonate cores, in a random order. For each image, answer two questions.</p>
 
   <div class="instr">
     <strong>Instructions</strong>
     <ul>
-      <li><strong>Q1:</strong> Identify the geological texture type of the image by selecting one of the 7 options.</li>
+      <li><strong>Q1:</strong> Identify the Dunham texture of each image by selecting one of the 7 options.</li>
       <li><strong>Q2:</strong> Judge whether the image is AI-generated or a real core photograph.</li>
       <li>Images are shown in random order. Evaluate each image independently.</li>
       <li>This session uses different samples from Session 1.</li>
@@ -124,7 +124,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 <div id="survey" class="screen">
   <div class="s-header">
     <div class="s-header-left">
-      <h2>Session 2 — Perceptual Test</h2>
+      <h2>Session 2 — Dunham texture classification</h2>
       <div class="pbar-wrap"><div class="pbar-fill" id="pbar"></div></div>
     </div>
     <div class="pbar-text" id="pbar-text">1 / 42</div>
@@ -243,7 +243,7 @@ function render(idx) {
       </div>
 
       <div class="q-section">
-        <h3>Q1 — What is the geological texture type of this sample?</h3>
+        <h3>Q1: Identify the Dunham texture of each image by selecting one of the 7 options.</h3>
         <div class="radio-grid">
           ${CLASSES.map(c => `
             <div class="roption ${r.q1 === c ? 'selected' : ''}" data-cls="${c}" onclick="selQ1(this,'${c}')">${CLS_NAMES[c]}</div>
