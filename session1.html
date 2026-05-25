@@ -127,8 +127,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
   <div class="tick">&#10003;</div>
   <h1>Session 1 Complete</h1>
   <p id="done-msg">Your responses have been submitted successfully. Thank you for your participation!</p>
-  <p style="color:#999;font-size:0.85em;margin-bottom:20px">Proceeding to Session 2 in <span id="countdown1">5</span> seconds…</p>
-  <a class="btn" href="session2.html">Start Session 2 →</a>
+  <p style="color:#999;font-size:0.85em;margin-bottom:20px">Loading Session 2…</p>
 </div>
 
 <script>
@@ -319,8 +318,7 @@ async function submit() {
 
   const payload = { session: 'Session1', evaluator, experience, timestamp: new Date().toISOString(), rows };
   show('complete');
-  var _n1=5, _el1=document.getElementById('countdown1');
-  var _t1=setInterval(function(){ _n1--; if(_el1) _el1.textContent=_n1; if(_n1<=0){ clearInterval(_t1); window.location.href='session2.html'; } },1000);
+  window.location.href='session2.html';
 
   try {
     await fetch(BACKEND_URL, {
