@@ -25,6 +25,10 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 .btn:disabled { background: #b0b8c1; cursor: not-allowed; }
 .btn-sec { background: white; color: #2c5f8a; border: 1.5px solid #2c5f8a; }
 .btn-sec:hover { background: #eaf3fb; }
+/* Checkbox group */
+.check-group { margin-bottom: 22px; }
+.check-group label { display: flex; align-items: flex-start; gap: 10px; font-size: 0.88em; color: #444; margin-bottom: 10px; cursor: pointer; line-height: 1.45; }
+.check-group input[type="checkbox"] { flex-shrink: 0; margin-top: 2px; width: 16px; height: 16px; accent-color: #2c5f8a; }
 
 /* ── Survey ── */
 #survey { max-width: 1140px; margin: 0 auto; padding: 24px 16px 40px; }
@@ -101,7 +105,22 @@ input[type="text"]:focus { border-color: #2c5f8a; }
     <option value="intermediate">Intermediate (2–5 years)</option>
     <option value="expert">Expert (&gt;5 years)</option>
   </select>
-  <br>
+  <label class="field-label">Occupation</label>
+  <select id="ev-occ" style="width:100%;padding:10px 14px;border:1.5px solid #ddd;border-radius:6px;font-size:0.95em;margin-bottom:22px;outline:none;">
+    <option value="">— Please select —</option>
+    <option value="academia">Academia</option>
+    <option value="industry_og">Industry — Oil &amp; Gas</option>
+    <option value="industry_renewables">Industry — Renewables</option>
+    <option value="industry_other">Industry — Other</option>
+    <option value="other">Other</option>
+  </select>
+  <label class="field-label">University / Company Name <span style="font-weight:400;color:#aaa">(optional)</span></label>
+  <input type="text" id="ev-org" placeholder="e.g. Queen Mary University of London">
+  <div class="check-group">
+    <label><input type="checkbox" id="ck-name"> Add my name to the acknowledgement list in the paper</label>
+    <label><input type="checkbox" id="ck-company"> Add my company/university name to the acknowledgement list</label>
+    <label><input type="checkbox" id="ck-notify"> Keep me informed when the results of the study are published</label>
+  </div>
   <button class="btn" onclick="startSession()">Begin Session 1 &rarr;</button>
 </div>
 
@@ -170,6 +189,11 @@ for (const cls of CLASSES)
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let evaluator = '';
 let experience = '';
+let occupation = '';
+let orgName = '';
+let ackName = false;
+let ackCompany = false;
+let keepInformed = false;
 let cur = 0;
 const resp = SAMPLES.map(() => ({ choice1A: null, r1B: { A:null, B:null, C:null, D:null } }));
 
@@ -182,10 +206,18 @@ function show(id) {
 function startSession() {
   const n = document.getElementById('ev-name').value.trim();
   const exp = document.getElementById('ev-exp').value;
+  const occ = document.getElementById('ev-occ').value;
   if (!n) { alert('Please enter your name to continue.'); return; }
   if (!exp) { alert('Please select your experience level to continue.'); return; }
+  if (!occ) { alert('Please select your occupation to continue.'); return; }
   evaluator = n;
   experience = exp;
+  occupation = occ;
+  orgName = document.getElementById('ev-org').value.trim();
+  ackName = document.getElementById('ck-name').checked;
+  ackCompany = document.getElementById('ck-company').checked;
+  keepInformed = document.getElementById('ck-notify').checked;
+  localStorage.setItem('survey_reg', JSON.stringify({ evaluator, experience, occupation, orgName, ackName, ackCompany, keepInformed }));
   show('survey');
   render(0);
 }
@@ -316,7 +348,7 @@ async function submit() {
     };
   });
 
-  const payload = { session: 'Session1', evaluator, experience, timestamp: new Date().toISOString(), rows };
+  const payload = { session: 'Session1', evaluator, experience, occupation, org_name: orgName, ack_name: ackName, ack_company: ackCompany, keep_informed: keepInformed, timestamp: new Date().toISOString(), rows };
   show('complete');
   window.location.href='session2.html';
 

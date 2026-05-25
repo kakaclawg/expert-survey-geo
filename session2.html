@@ -185,6 +185,11 @@ const ITEMS = shuffle(raw, prng(20260516));
 // ── STATE ─────────────────────────────────────────────────────────────────────
 let evaluator = '';
 let experience = '';
+let occupation = '';
+let orgName = '';
+let ackName = false;
+let ackCompany = false;
+let keepInformed = false;
 let cur = 0;
 const resp = ITEMS.map(() => ({ q1: null, q2: null }));
 
@@ -204,6 +209,24 @@ function startSession() {
   show('survey');
   render(0);
 }
+
+// Auto-load registration from Session 1 and skip intro
+(function() {
+  try {
+    const reg = JSON.parse(localStorage.getItem('survey_reg') || '{}');
+    if (reg.evaluator && reg.experience) {
+      evaluator = reg.evaluator;
+      experience = reg.experience;
+      occupation = reg.occupation || '';
+      orgName = reg.orgName || '';
+      ackName = !!reg.ackName;
+      ackCompany = !!reg.ackCompany;
+      keepInformed = !!reg.keepInformed;
+      show('survey');
+      render(0);
+    }
+  } catch(e) {}
+})();
 
 // ── NAVIGATION ────────────────────────────────────────────────────────────────
 function nav(dir) {
@@ -298,7 +321,7 @@ async function submit() {
     };
   });
 
-  const payload = { session: 'Session2', evaluator, experience, timestamp: new Date().toISOString(), rows };
+  const payload = { session: 'Session2', evaluator, experience, occupation, org_name: orgName, ack_name: ackName, ack_company: ackCompany, keep_informed: keepInformed, timestamp: new Date().toISOString(), rows };
   show('complete');
   var _n2=5, _el2=document.getElementById('countdown2');
   var _t2=setInterval(function(){ _n2--; if(_el2) _el2.textContent=_n2; if(_n2<=0){ clearInterval(_t2); window.location.href='index.html'; } },1000);
