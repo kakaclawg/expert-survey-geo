@@ -143,7 +143,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
   <h1>Experiment 2 Complete</h1>
   <div id="result-stats" style="margin:18px 0 22px;padding:16px 20px;background:#f7f9fc;border-radius:8px;font-size:0.92em;line-height:1.8;color:#333;"></div>
   <p id="done-msg">Your responses have been submitted successfully. Thank you for your participation!</p>
-  <p style="color:#999;font-size:0.85em;margin-bottom:20px">Returning to home in <span id="countdown2">5</span> seconds…</p>
+  <p style="color:#999;font-size:0.85em;margin-bottom:20px">Click the button below when you are ready.</p>
   <a class="btn" href="index.html">Back to Home</a>
 </div>
 
@@ -342,8 +342,6 @@ async function submit() {
     `<strong>Your Results:</strong><br>` +
     `Dunham texture (Q1): <strong>${q1Correct} / ${total}</strong> correct<br>` +
     `AI detection (Q2): <strong>${q2Correct} / ${total}</strong> correctly identified`;
-  var _n2=5, _el2=document.getElementById('countdown2');
-  var _t2=setInterval(function(){ _n2--; if(_el2) _el2.textContent=_n2; if(_n2<=0){ clearInterval(_t2); window.location.href='index.html'; } },1000);
 
   try {
     await fetch(BACKEND_URL, {
