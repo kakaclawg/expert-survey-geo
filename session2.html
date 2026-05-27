@@ -153,7 +153,10 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzbc79GVGGRUr-HMyEgol5wyA7MdfhDVwWUoczsDEJx6G0_8GczWWXxTAwgkFpbDA6lPA/exec';
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
-const CLASSES   = ['WK','PK','GS','FS','RS','BS','CR','MU'];
+// SAMPLE_CLASSES: classes that have images on disk (used to generate the 42 samples)
+const SAMPLE_CLASSES = ['WK','PK','GS','FS','RS','BS','CR'];
+// Q1_OPTIONS: all answer choices shown to the evaluator (includes Mudstone)
+const Q1_OPTIONS = ['WK','PK','GS','FS','RS','BS','CR','MU'];
 const CLS_NAMES = { GS:'Grainstone', FS:'Floatstone', PK:'Packstone', WK:'Wackestone', BS:'Boundstone', RS:'Rudstone', CR:'Crystalline', MU:'Mudstone' };
 
 // Seeded PRNG — same fixed shuffle for all evaluators
@@ -176,7 +179,7 @@ function shuffle(arr, rng) {
 
 // Build 42 items (7 classes × 2 samples × 3 methods), then shuffle
 const raw = [];
-for (const cls of CLASSES)
+for (const cls of SAMPLE_CLASSES)
   for (let n = 1; n <= 2; n++)
     for (const method of ['GT','Exp0','Exp4'])
       raw.push({ cls, n, method });
@@ -270,7 +273,7 @@ function render(idx) {
         <h3>Q1: Identify the Dunham texture of each image. <span style="font-weight:400;color:#666;font-size:0.9em">(max 2 choices)</span></h3>
         <p style="font-size:0.83em;color:#555;margin-bottom:10px">Note the 2 mm scale bar on each image.</p>
         <div class="radio-grid">
-          ${CLASSES.map(c => `
+          ${Q1_OPTIONS.map(c => `
             <div class="roption ${r.q1.includes(c) ? 'selected' : ''}" data-cls="${c}" onclick="selQ1(this,'${c}')">${CLS_NAMES[c]}</div>
           `).join('')}
         </div>
