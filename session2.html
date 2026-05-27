@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Session 2 — Perceptual Test</title>
+<title>Experiment 2 — Perceptual Test</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; }
@@ -82,7 +82,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 
 <!-- ── INTRO ── -->
 <div id="intro" class="screen active">
-  <h1>Session 2<br>Dunham texture classification</h1>
+  <h1>Experiment 2<br>Dunham texture classification</h1>
   <p class="sub">You will be shown 42 images of carbonate cores, in a random order. For each image, answer two questions.</p>
 
   <div class="instr">
@@ -106,7 +106,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
     <option value="expert">Expert (&gt;5 years)</option>
   </select>
   <br>
-  <button class="btn" onclick="startSession()">Begin Session 2 &rarr;</button>
+  <button class="btn" onclick="startSession()">Begin Experiment 2 &rarr;</button>
 </div>
 
 <!-- ── Dunham floating button + modal ── -->
@@ -124,7 +124,7 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 <div id="survey" class="screen">
   <div class="s-header">
     <div class="s-header-left">
-      <h2>Session 2 — Dunham texture classification</h2>
+      <h2>Experiment 2 — Dunham texture classification</h2>
       <div class="pbar-wrap"><div class="pbar-fill" id="pbar"></div></div>
     </div>
     <div class="pbar-text" id="pbar-text">1 / 42</div>
@@ -140,7 +140,8 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 <!-- ── COMPLETE ── -->
 <div id="complete" class="screen">
   <div class="tick">&#10003;</div>
-  <h1>Session 2 Complete</h1>
+  <h1>Experiment 2 Complete</h1>
+  <div id="result-stats" style="margin:18px 0 22px;padding:16px 20px;background:#f7f9fc;border-radius:8px;font-size:0.92em;line-height:1.8;color:#333;"></div>
   <p id="done-msg">Your responses have been submitted successfully. Thank you for your participation!</p>
   <p style="color:#999;font-size:0.85em;margin-bottom:20px">Returning to home in <span id="countdown2">5</span> seconds…</p>
   <a class="btn" href="index.html">Back to Home</a>
@@ -152,8 +153,8 @@ input[type="text"]:focus { border-color: #2c5f8a; }
 const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbzbc79GVGGRUr-HMyEgol5wyA7MdfhDVwWUoczsDEJx6G0_8GczWWXxTAwgkFpbDA6lPA/exec';
 
 // ── DATA ─────────────────────────────────────────────────────────────────────
-const CLASSES   = ['WK','PK','GS','FS','RS','BS','CR'];
-const CLS_NAMES = { GS:'Grainstone', FS:'Floatstone', PK:'Packstone', WK:'Wackestone', BS:'Boundstone', RS:'Rudstone', CR:'Crystalline' };
+const CLASSES   = ['WK','PK','GS','FS','RS','BS','CR','MU'];
+const CLS_NAMES = { GS:'Grainstone', FS:'Floatstone', PK:'Packstone', WK:'Wackestone', BS:'Boundstone', RS:'Rudstone', CR:'Crystalline', MU:'Mudstone' };
 
 // Seeded PRNG — same fixed shuffle for all evaluators
 function prng(seed) {
@@ -191,7 +192,7 @@ let ackName = false;
 let ackCompany = false;
 let keepInformed = false;
 let cur = 0;
-const resp = ITEMS.map(() => ({ q1: null, q2: null }));
+const resp = ITEMS.map(() => ({ q1: [], q2: null }));
 
 // ── SCREENS ───────────────────────────────────────────────────────────────────
 function show(id) {
@@ -239,7 +240,7 @@ function nav(dir) {
 
 function validate() {
   const r = resp[cur];
-  if (!r.q1) { alert('Please answer Q1 before continuing.'); return false; }
+  if (r.q1.length === 0) { alert('Please answer Q1 before continuing.'); return false; }
   if (!r.q2) { alert('Please answer Q2 before continuing.'); return false; }
   return true;
 }
@@ -266,13 +267,13 @@ function render(idx) {
       </div>
 
       <div class="q-section">
-        <h3>Q1: Identify the Dunham texture of each image by selecting one of the 7 options.</h3>
+        <h3>Q1: Identify the Dunham texture of each image. <span style="font-weight:400;color:#666;font-size:0.9em">(max 2 choices)</span></h3>
+        <p style="font-size:0.83em;color:#555;margin-bottom:10px">Note the 2 mm scale bar on each image.</p>
         <div class="radio-grid">
           ${CLASSES.map(c => `
-            <div class="roption ${r.q1 === c ? 'selected' : ''}" data-cls="${c}" onclick="selQ1(this,'${c}')">${CLS_NAMES[c]}</div>
+            <div class="roption ${r.q1.includes(c) ? 'selected' : ''}" data-cls="${c}" onclick="selQ1(this,'${c}')">${CLS_NAMES[c]}</div>
           `).join('')}
         </div>
-        <p class="mudstone-note">No mudstone textures are included in this exercise.</p>
       </div>
 
       <div class="q-section">
@@ -282,15 +283,23 @@ function render(idx) {
           <div class="boption ${r.q2 === 'no'  ? 'selected' : ''}" data-val="no"  onclick="selQ2(this,'no')">No</div>
         </div>
       </div>
+      <p style="font-size:0.76em;color:#888;font-style:italic;margin-top:18px;text-align:center;">Use the 📖 Dunham button at the bottom-right corner to open the texture classification reference chart.</p>
     </div>
   `;
 }
 
 // ── INTERACTIONS ──────────────────────────────────────────────────────────────
 function selQ1(el, cls) {
-  resp[cur].q1 = cls;
-  document.querySelectorAll('.roption').forEach(e => e.classList.remove('selected'));
-  el.classList.add('selected');
+  const q1 = resp[cur].q1;
+  const idx = q1.indexOf(cls);
+  if (idx !== -1) {
+    q1.splice(idx, 1);
+    el.classList.remove('selected');
+  } else {
+    if (q1.length >= 2) return;
+    q1.push(cls);
+    el.classList.add('selected');
+  }
 }
 
 function selQ2(el, val) {
@@ -314,15 +323,22 @@ async function submit() {
       true_method:   method,
       is_ai:         isAI,
       q1_answer:     r.q1,
-      q1_name:       CLS_NAMES[r.q1],
-      q1_correct:    r.q1 === cls,
+      q1_name:       r.q1.map(c => CLS_NAMES[c]),
+      q1_correct:    r.q1.includes(cls),
       q2_answer:     r.q2,
       q2_correct:    (r.q2 === 'yes') === isAI,
     };
   });
 
-  const payload = { session: 'Session2', evaluator, experience, occupation, org_name: orgName, ack_name: ackName, ack_company: ackCompany, keep_informed: keepInformed, timestamp: new Date().toISOString(), rows };
+  const payload = { session: 'Experiment2', evaluator, experience, occupation, org_name: orgName, ack_name: ackName, ack_company: ackCompany, keep_informed: keepInformed, timestamp: new Date().toISOString(), rows };
+  const q1Correct = rows.filter(r => r.q1_correct).length;
+  const q2Correct = rows.filter(r => r.q2_correct).length;
+  const total = rows.length;
   show('complete');
+  document.getElementById('result-stats').innerHTML =
+    `<strong>Your Results:</strong><br>` +
+    `Dunham texture (Q1): <strong>${q1Correct} / ${total}</strong> correct<br>` +
+    `AI detection (Q2): <strong>${q2Correct} / ${total}</strong> correctly identified`;
   var _n2=5, _el2=document.getElementById('countdown2');
   var _t2=setInterval(function(){ _n2--; if(_el2) _el2.textContent=_n2; if(_n2<=0){ clearInterval(_t2); window.location.href='index.html'; } },1000);
 
